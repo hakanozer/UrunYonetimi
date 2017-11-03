@@ -2,6 +2,7 @@ package com.example.java_oglen.urunyonetimi;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -45,6 +47,8 @@ public class AnaKategori extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Button btnYenile;
 
     private OnFragmentInteractionListener mListener;
 
@@ -86,11 +90,21 @@ public class AnaKategori extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         String url = "http://jsonbulut.com/json/companyCategory.php?ref=cb226ff2a31fdd460087fedbb34a6023";
-        new jsonData(url, this.getContext()).execute();
         view  = inflater.inflate(R.layout.fragment_ana_kategori, container, false);
         anaKategoriLs = (ListView) view.findViewById(R.id.AnaKategoriListView);
+        btnYenile = (Button) view.findViewById(R.id.btnYenile);
+        btnYenile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "http://jsonbulut.com/json/companyCategory.php?ref=cb226ff2a31fdd460087fedbb34a6023";
+                new jsonData(url, view.getContext()).execute();
+            }
+        });
+        new jsonData(url, this.getContext()).execute();
         return view;
     }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -166,13 +180,14 @@ public class AnaKategori extends Fragment {
                     // kullanıcı kayıt başarılı
                     Toast.makeText(cnx, mesaj, Toast.LENGTH_SHORT).show();
                     JSONArray arr = obj.getJSONArray("Kategoriler").getJSONObject(0).getJSONArray("Categories");
-                    ArrayList<String> ustKat = new ArrayList<>();
-                    ArrayList<KategoriPro> tumKat = new ArrayList<>();
+                    final ArrayList<String> ustKat = new ArrayList<>();
+                    final ArrayList<KategoriPro> tumKat = new ArrayList<>();
                     for(int i = 0; i<arr.length(); i++) {
                         KategoriPro kt = new KategoriPro();
-                        kt.setCatogryId(""+KategorilerEnum.CatogryId);
-                        kt.setCatogryName(""+KategorilerEnum.CatogryName);
-                        kt.setTopCatogryId(""+KategorilerEnum.TopCatogryId);
+                        JSONObject ns = arr.getJSONObject(i);
+                        kt.setCatogryId(ns.getString(""+KategorilerEnum.CatogryId));
+                        kt.setCatogryName(ns.getString(""+KategorilerEnum.CatogryName));
+                        kt.setTopCatogryId(ns.getString(""+KategorilerEnum.TopCatogryId));
                         tumKat.add(kt);
                     }
 
@@ -187,6 +202,43 @@ public class AnaKategori extends Fragment {
                     Log.d("ArrayList" ,ustKat.toString() );
                     ArrayAdapter<String> anaKatArrAdp=new ArrayAdapter<String>( view.getContext() , android.R.layout.simple_list_item_1, android.R.id.text1, ustKat);
                     anaKategoriLs.setAdapter(anaKatArrAdp);
+                    anaKategoriLs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            // üst kat id yi yakala
+                            String ustid = "";
+                            for (KategoriPro kr : tumKat) {
+                                if(ustKat.get(i).equals(kr.getCatogryName())) {
+                                    ustid = kr.getCatogryId();
+                                    break;
+                                }
+                            }
+
+                            final ArrayList<String> altLs = new ArrayList<>();
+                            for(KategoriPro kr : tumKat) {
+                                if(kr.getTopCatogryId().equals(ustid)) {
+                                    altLs.add(kr.getCatogryName());
+                                }
+                            }
+                            ArrayAdapter<String> altKatArrAdp=new ArrayAdapter<String>( view.getContext() , android.R.layout.simple_list_item_1, android.R.id.text1,altLs );
+                            anaKategoriLs.setAdapter(altKatArrAdp);
+                            anaKategoriLs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    //Toast.makeText(cnx, altLs.get(i), Toast.LENGTH_SHORT).show();
+                                    for( KategoriPro krt : tumKat) {
+                                        if(krt.getCatogryName().equals(altLs.get(i))) {
+                                            String altKatid = krt.getCatogryId();
+                                            //Toast.makeText(cnx, altKatid, Toast.LENGTH_SHORT).show();
+                                            Intent ii = new Intent(cnx , UrunList.class);
+                                            ii.putExtra("kid", altKatid);
+                                            startActivity(ii);
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
 
 
                 }else {

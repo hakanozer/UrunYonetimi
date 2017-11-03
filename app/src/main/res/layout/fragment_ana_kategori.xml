@@ -5,8 +5,24 @@
     tools:context="com.example.java_oglen.urunyonetimi.AnaKategori">
 
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+
+        <Button
+            android:id="@+id/btnYenile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="Yenile" />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/AnaKategoriListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btnYenile"
+        android:layout_marginTop="50dp" />
 </FrameLayout>
