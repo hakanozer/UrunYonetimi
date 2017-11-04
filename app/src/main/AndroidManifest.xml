@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".UrunList" />
-        <activity android:name=".UrunAyrinti"></activity>
+        <activity android:name=".UrunAyrinti" />
+        <activity android:name=".Splash"></activity>
     </application>
 
 </manifest>
