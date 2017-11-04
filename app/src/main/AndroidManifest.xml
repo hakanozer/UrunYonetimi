@@ -3,6 +3,8 @@
     package="com.example.java_oglen.urunyonetimi">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- if you want to load images from a file OR from the internet -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UrunList"></activity>
+        <activity android:name=".UrunList" />
+        <activity android:name=".UrunAyrinti"></activity>
     </application>
 
 </manifest>

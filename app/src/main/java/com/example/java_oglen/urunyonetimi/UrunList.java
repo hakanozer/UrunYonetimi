@@ -143,6 +143,19 @@ public class UrunList extends AppCompatActivity {
                     };
 
                     urunListView.setAdapter(urunBaseAdapter);
+                    urunListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                           // Toast.makeText(cnx, "Seçim " + i, Toast.LENGTH_SHORT).show();
+                            try {
+                                Intent uruni = new Intent(UrunList.this, UrunAyrinti.class);
+                                UrunAyrinti.uobj = arr.getJSONObject(i);
+                                startActivity(uruni);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
 
                 }else {
                     Toast.makeText(cnx, "data yok", Toast.LENGTH_SHORT).show();
