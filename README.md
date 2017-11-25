@@ -2,7 +2,7 @@
 ![alt text](https://seeklogo.com/images/A/android-logo-9E4539A7DE-seeklogo.com.png "Android Ürün Yönetimi")
 
 Bu proje bir şirketin mobil uygulama üzerinden ürünlerini anlık olarak tüm kullanıcılarına tanıtmayı ve şirket ile iletişime geçmesini hedefler.
-##### Bu Projede :
+##### Projede Kullanılan Yapılar :
 1. Android SDK
 2. JSON Servis
 3. SQLite
