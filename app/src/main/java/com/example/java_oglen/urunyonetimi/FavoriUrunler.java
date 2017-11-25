@@ -1,22 +1,22 @@
 package com.example.java_oglen.urunyonetimi;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FavoriUrunler.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FavoriUrunler#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class FavoriUrunler extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,12 +60,90 @@ public class FavoriUrunler extends Fragment {
         }
     }
 
+    ListView lview;
+    TextView tvbaslik, tvfiyat;
+    ArrayList<String> baslikim = new ArrayList<>();
+    ArrayList<String> fiyatim = new ArrayList<>();
+    BaseAdapter ba;
+    LayoutInflater li;
+    Boolean favoriyok = true;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favori_urunler, container, false);
+        View v = inflater.inflate(R.layout.fragment_favori_urunler, container, false);
+        lview = (ListView) v.findViewById(R.id.lvfavori);
+
+        SQLiteDatabase fOku = new DB(v.getContext()).getReadableDatabase();
+
+
+        //query ile sorgumuzu gerçekleştiririz standart sql sorgusu
+        String query = "SELECT * FROM favoriler";
+
+        //sql data base bize cursor yapsısında bir veri dönüşü yapacaktır.Yapmış olduğumuz bu sorguyu belirtiriz
+        // Cursor Veritabanı nesneleri içerisinde satır bazlı hareket etmemizi sağlar
+        Cursor cr = fOku.rawQuery(query, null);
+
+        //Database de ulaşmak istediğim verilere ulaşmamı sağlıyor
+        int uid = cr.getColumnIndex("kid");
+        int ubaslik = cr.getColumnIndex("ubaslik");
+        int ufiyat = cr.getColumnIndex("ufiyat");
+
+
+        //data base dolu ise ekrana birşeyler yazdırıyoruz
+        if (cr != null) {
+
+            //çektiğimiz verileri sırayla okumamızı sağlıyor
+            while (cr.moveToNext()) {
+
+                String baslik = cr.getString(ubaslik);
+                baslikim.add(baslik);
+                fiyatim.add(cr.getString(ufiyat));
+
+            }
+
+            lview = (ListView) v.findViewById(R.id.lvfavori);
+            li = LayoutInflater.from(v.getContext());
+
+            ba = new BaseAdapter() {
+                @Override
+                public int getCount() {
+                    return baslikim.size();
+                }
+
+                @Override
+                public Object getItem(int position) {
+                    return null;
+                }
+
+                @Override
+                public long getItemId(int position) {
+                    return 0;
+                }
+
+                @Override
+                public View getView(int i, View view, ViewGroup parent) {
+                    if (view == null) {
+                        view = li.inflate(R.layout.favoritem, null);
+                    } else {
+                        //Log.e("olusturulmuş","view favori ürünler");
+                    }
+
+                    tvbaslik = (TextView) view.findViewById(R.id.item_baslik);
+                    tvfiyat = (TextView) view.findViewById(R.id.item_fiyat);
+
+                    tvbaslik.setText(baslikim.get(i));
+                    tvfiyat.setText(fiyatim.get(i));
+
+                    return view;
+                }
+            };
+            lview.setAdapter(ba);
+        }
+        return v;
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

@@ -1,22 +1,28 @@
 package com.example.java_oglen.urunyonetimi;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+
+import java.io.IOException;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link Profil.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link Profil#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Profil extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,12 +66,136 @@ public class Profil extends Fragment {
         }
     }
 
+    View view;
+    EditText userName, userSurname, userMail, userPhone, userPass;
+    Button btnGuncelle;
+    static SharedPreferences sha;
+    static SharedPreferences.Editor edit;
+    static String userId;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profil, container, false);
+        view =  inflater.inflate(R.layout.fragment_profil, container, false);
+
+        userName = (EditText) view.findViewById(R.id.txtuserName);
+        userSurname = (EditText) view.findViewById(R.id.txtuserSurname);
+        userMail = (EditText) view.findViewById(R.id.txtuserMail);
+        userPhone = (EditText) view.findViewById(R.id.txtuserPhone);
+        userPass = (EditText) view.findViewById(R.id.txtuserPass);
+        btnGuncelle = (Button) view.findViewById(R.id.btnGuncelle);
+
+        sha = view.getContext().getSharedPreferences("urunxml", Context.MODE_PRIVATE);
+        edit = sha.edit();
+        userName.setText(sha.getString("name", ""));
+        userSurname.setText(sha.getString("surname", ""));
+        userMail.setText(sha.getString("email", ""));
+        userPhone.setText(sha.getString("phone", ""));
+        userPass.setText(sha.getString("userPass", ""));
+        userId = sha.getString("kid","");
+
+        btnGuncelle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String n = userName.getText().toString().trim();
+                String s = userSurname.getText().toString().trim();
+                String m = userMail.getText().toString().trim();
+                String p = userPhone.getText().toString().trim();
+                String ss = userPass.getText().toString().trim();
+
+                if (ss.equals("")) {
+                    Toast.makeText(view.getContext(), "Lütfen Şifre Belirleyiniz !", Toast.LENGTH_SHORT).show();
+                    userPass.requestFocus();
+                }else {
+                    String url =  "http://jsonbulut.com/json/userSettings.php?ref=cb226ff2a31fdd460087fedbb34a6023&userName="+n+"&userSurname="+s+"&userMail="+m+"&userPhone="+p+"&userPass="+ss+"&userId="+userId+"";
+                    Log.d("URL " , url);
+                    new jsonGuncelle(url,view.getContext()).execute();
+                }
+
+            }
+        });
+        return view;
     }
+
+
+    class jsonGuncelle extends AsyncTask<Void,Void,Void > {
+        String url = "";
+        String data = "";
+        Context cnx;
+        ProgressDialog pd;
+
+
+
+
+        public jsonGuncelle(String url, Context cnx) {
+            this.url = url;
+            this.cnx = cnx;
+            pd = new ProgressDialog(cnx);
+            pd.setMessage("İşlem gerçekleşiyor azıcık bekle");
+            pd.show();
+
+
+        }
+
+
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                data = Jsoup.connect(url).ignoreContentType(true).get().body().text();
+            } catch (IOException ex) {
+                Log.e("data json hatası", "doınBackground", ex);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            try {
+                JSONObject jo = new JSONObject(data);
+                boolean durum = jo.getJSONArray("user").getJSONObject(0).getBoolean("durum");
+                String mesaj = jo.getJSONArray("user").getJSONObject(0).getString("mesaj");
+                if (durum) {
+                    //giriş basarılı
+                    Toast.makeText(cnx, mesaj, Toast.LENGTH_SHORT).show();
+
+                    String n = userName.getText().toString().trim();
+                    String s = userSurname.getText().toString().trim();
+                    String m = userMail.getText().toString().trim();
+                    String p = userPhone.getText().toString().trim();
+
+                    Profil.edit.putString("kid", userId);
+                    Profil.edit.putString("name", n);
+                    Profil.edit.putString("phone", p);
+                    Profil.edit.putString("surname", s);
+                    Profil.edit.putString("email", m);
+                    Profil.edit.commit();// yazma işlemi bitti
+
+                    /*if(cnx instanceof Activity){
+                        ((Activity)cnx).finish(); }
+                        */
+
+
+                } else {
+                    //kayıt basarısız
+                    Toast.makeText(cnx, mesaj, Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException ex) {
+                Log.e("data json hatası", "doınBackground", ex);
+            }
+            pd.dismiss();
+        }
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

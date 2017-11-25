@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.java_oglen.urunyonetimi.KullaniciGiris">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp"
+        android:text="Kullanıcı Giriş"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/txtGirisAdi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView2"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="27dp"
+        android:ems="10"
+        android:hint="Kullanıcı Mail"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/txtGirisSifre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@+id/txtGirisAdi"
+        android:layout_below="@+id/txtGirisAdi"
+        android:layout_marginTop="13dp"
+        android:ems="10"
+        android:hint="Şifreniz"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/txtGirisSifre"
+        android:layout_marginEnd="15dp"
+        android:onClick="girisJson"
+        android:text="Giriş Yap" />
+
+    <Button
+        android:onClick="kayitYap"
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/txtGirisSifre"
+        android:layout_below="@+id/txtGirisSifre"
+        android:text="Kayıt Yap" />
+
+</RelativeLayout>

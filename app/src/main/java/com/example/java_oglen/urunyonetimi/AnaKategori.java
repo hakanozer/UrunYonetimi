@@ -233,6 +233,7 @@ public class AnaKategori extends Fragment {
                                             Intent ii = new Intent(cnx , UrunList.class);
                                             ii.putExtra("kid", altKatid);
                                             startActivity(ii);
+                                            //getActivity().finish();
                                         }
                                     }
                                 }

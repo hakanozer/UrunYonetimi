@@ -1,13 +1,61 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.java_oglen.urunyonetimi.Profil">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Kullanıcı Profil"
+        android:textSize="24sp" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/txtuserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Adınız"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/txtuserSurname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Soyadınız"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/txtuserPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Telefon"
+        android:inputType="phone" />
+
+    <EditText
+        android:id="@+id/txtuserMail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Mail" />
+
+    <EditText
+        android:id="@+id/txtuserPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Şifreniz"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/btnGuncelle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Güncelle" />
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.example.java_oglen.urunyonetimi;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,10 +22,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AnaKategori.OnFragmentInteractionListener, FavoriUrunler.OnFragmentInteractionListener, Sepetim.OnFragmentInteractionListener, Profil.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, AnaKategori.OnFragmentInteractionListener, FavoriUrunler.OnFragmentInteractionListener, Sepetim.OnFragmentInteractionListener, Profil.OnFragmentInteractionListener, GirisTanitim.OnFragmentInteractionListener{
+
+
+    SharedPreferences sha;
+    SharedPreferences.Editor edit;
+    TextView txtIsimSoyisim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +39,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -39,6 +49,26 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        sha = getSharedPreferences("urunxml", MODE_PRIVATE );
+        edit = sha.edit();
+
+        txtIsimSoyisim = (TextView) navigationView.getHeaderView(0).findViewById(R.id.txtIsimSoyisim);
+        String adiSoyadi = sha.getString("name", "") + " " + sha.getString("surname", "");
+        if(!sha.getString("kid", "").equals("")) {
+            txtIsimSoyisim.setText(adiSoyadi);
+        }
+
+        Fragment fgt = null;
+        Class fgtClass = GirisTanitim.class;
+        try {
+            fgt = (Fragment) fgtClass.newInstance();
+            FragmentManager mng = getSupportFragmentManager();
+            mng.beginTransaction().replace(R.id.flContent, fgt).commit();
+        } catch (Exception ex) {
+            Log.e("Fragment Hatası ", ex.toString());
+        }
     }
 
     @Override
@@ -88,14 +118,30 @@ public class MainActivity extends AppCompatActivity
             fgtClass = FavoriUrunler.class;
 
         } else if (id == R.id.nav_slideshow) {
-            fgtClass = Sepetim.class;
+            //fgtClass = Sepetim.class;
+            Intent i = new Intent(MainActivity.this, KullaniciGiris.class);
+            startActivity(i);
 
         } else if (id == R.id.nav_manage) {
             fgtClass = Profil.class;
 
         } else if (id == R.id.nav_share) {
 
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            String shareBody = "Java 10 Ürün Yönetimi <br> <img src=\"https://developer.android.com/_static/images/android/touchicon-180.png\"/>";
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Paylaşım Ekranı");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(sharingIntent, "Paylaşım Ünvanı"));
+
         } else if (id == R.id.nav_send) {
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/html");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "mail@mail.con" });
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Java 10");
+            intent.putExtra(Intent.EXTRA_TEXT, "Email detay bölümü");
+            startActivity(Intent.createChooser(intent, "Mail Gönder"));
 
         }else if (id == R.id.nav_cikis) {
             // uyarı göster
@@ -107,7 +153,10 @@ public class MainActivity extends AppCompatActivity
             uyari.setPositiveButton("Çıkış Yap", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    Toast.makeText(MainActivity.this, "Çıkış Yapılsın", Toast.LENGTH_SHORT).show();
+                    edit.remove("kid");
+                    if(edit.commit()) {
+                        Toast.makeText(MainActivity.this, "Çıkış Yaptınız !", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -140,5 +189,35 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    int tiklama = 0;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK  && event.getRepeatCount() == 0) {
+            tiklama++;
+            if(tiklama == 2) {
+                AlertDialog.Builder uyari = new AlertDialog.Builder(this);
+                uyari.setMessage("Lütfen Çıkma");
+                uyari.setTitle("Çıkma İşlemi");
+                uyari.setCancelable(true);
+                uyari.setPositiveButton("Çıkış Yap", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        System.exit(0);
+                    }
+                });
+                uyari.setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        tiklama = 0;
+                    }
+                });
+                uyari.show();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

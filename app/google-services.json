@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "906583258471",
+    "firebase_url": "https://urunyonetimi-4fe3a.firebaseio.com",
+    "project_id": "urunyonetimi-4fe3a",
+    "storage_bucket": "urunyonetimi-4fe3a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906583258471:android:e8d14b0521a944c8",
+        "android_client_info": {
+          "package_name": "com.example.java_oglen.urunyonetimi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906583258471-s4hu4dkn8ndc7q9jh1c08racb3tv1tj3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.java_oglen.urunyonetimi",
+            "certificate_hash": "eac4a78bae385cc7dc16515f753036a969923755"
+          }
+        },
+        {
+          "client_id": "906583258471-pe3g5qa150upfq0u9niuu1k91uir2jqh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF5BTXDvUKZMoZn2ixg7htyQoqm0ysNco"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906583258471-pe3g5qa150upfq0u9niuu1k91uir2jqh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

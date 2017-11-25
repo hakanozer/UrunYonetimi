@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -40,6 +41,8 @@ public class UrunList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_urun_list);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         urunListView = (ListView) findViewById(R.id.urunListView);
         urunLayoutInflater = LayoutInflater.from(this);
@@ -88,6 +91,7 @@ public class UrunList extends AppCompatActivity {
             super.onPostExecute(aVoid);
             // grafiksel özelliği olan işlemler bu bölümde yapılır.
             try {
+                //Log.d("TumData", data);
                 JSONObject obj = new JSONObject(data);
                 boolean durum = obj.getJSONArray("Products").getJSONObject(0).getBoolean("durum");
                 String mesaj = obj.getJSONArray("Products").getJSONObject(0).getString("mesaj");
@@ -151,6 +155,7 @@ public class UrunList extends AppCompatActivity {
                                 Intent uruni = new Intent(UrunList.this, UrunAyrinti.class);
                                 UrunAyrinti.uobj = arr.getJSONObject(i);
                                 startActivity(uruni);
+                               // finish();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -172,4 +177,15 @@ public class UrunList extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

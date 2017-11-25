@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/item_logo"
+        android:src="@mipmap/ic_launcher"
+        android:layout_width="72dp"
+        android:layout_height="72dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="72dp">
+
+        <TextView
+            android:id="@+id/item_baslik"
+            android:paddingLeft="10dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="42dp" />
+
+        <TextView
+            android:id="@+id/item_fiyat"
+            android:paddingRight="10dp"
+
+            android:gravity="center_vertical|right"
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
